@@ -1,0 +1,11 @@
+{
+  "name": "JS Console",
+  "version": "1.0.0",
+  "description": "Open the JavaScript console by pressing Shift + `",
+  "content_scripts": [
+    {
+      "js": ["console.js"],
+      "css": ["style.css"]
+    }
+  ]
+}
