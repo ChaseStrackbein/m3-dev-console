@@ -87,7 +87,7 @@
   
     // Up key
     $codeInput.on('keydown', e => {
-      if (e.keyCode !== 38) return true;
+      if (e.which !== 38) return true;
       if ($codeInput[0].selectionStart !== $codeInput[0].selectionEnd) return true;
       const newLineIndex = $codeInput.val().indexOf('\n');
       if (newLineIndex > -1 && $codeInput[0].selectionStart > newLineIndex) return true;
@@ -99,7 +99,7 @@
 
     // Down key
     $codeInput.on('keydown', e => {
-      if (e.keyCode !== 40) return true;
+      if (e.which !== 40) return true;
       if ($codeInput[0].selectionStart !== $codeInput[0].selectionEnd) return true;
       const lastNewLineIndex = $codeInput.val().lastIndexOf('\n');
       if (lastNewLineIndex > -1 && $codeInput[0].selectionStart < lastNewLineIndex) return true;
@@ -111,7 +111,7 @@
 
     // Enter on code input to submit
     $codeInput.on('keydown', e => {
-      if (e.keyCode !== 13 || e.shiftKey) return true;
+      if (e.which !== 13 || e.shiftKey) return true;
       
       e.preventDefault();
       submitConsole();
@@ -121,13 +121,10 @@
     $clearBtn.on('click', clearLogs);
 
     $(document).on('keydown', e => {
-      if (e.keyCode !== 192 || !e.shiftKey) return true;
+      if (e.which !== 192 || !e.shiftKey) return true;
+      if (stopHotKey(e)) return true;
 
-      $wrapper.toggleClass('d-none');
-      if ($wrapper.is(':visible')) {
-        updateLogUI();
-        $(document).one('keyup', () => $codeInput.focus());
-      }
+      toggleConsole();
     });
 
     $resizeBar.on('mousedown', e => {
@@ -158,6 +155,19 @@
 
   const inject = () => {
     $('#m-page-loader').after($wrapper);
+  };
+
+  const stopHotKey = (e) => {
+    if (e.target === $codeInput[0]) return false;
+    return e.target.tagName == 'INPUT' || e.target.tagName == 'SELECT' || e.target.tagName == 'TEXTAREA' || e.target.isContentEditable; 
+  };
+
+  const toggleConsole = () => {
+    $wrapper.toggleClass('d-none');
+    if ($wrapper.is(':visible')) {
+      updateLogUI();
+      $(document).one('keyup', () => $codeInput.focus());
+    }
   };
 
   const inputHistoryUp = () => {
