@@ -120,12 +120,16 @@
 
     $clearBtn.on('click', clearLogs);
 
-    $(document).on('keydown', e => {
-      if (e.which !== 192 || !e.shiftKey) return true;
-      if (stopHotKey(e)) return true;
+    if (window.kb) {
+      window.kb.register('JS Console', 'General', { key: '~' }, toggleConsole);
+    } else {
+      $(document).on('keydown', e => {
+        if (e.which !== 192 || !e.shiftKey) return true;
+        if (stopHotKey(e)) return true;
 
-      toggleConsole();
-    });
+        toggleConsole();
+      });
+    }
 
     $resizeBar.on('mousedown', e => {
       resizing = true;
