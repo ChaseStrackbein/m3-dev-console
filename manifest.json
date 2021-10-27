@@ -1,7 +1,7 @@
 {
-  "name": "JS Console",
+  "name": "DEV Console",
   "version": "1.0.2",
-  "description": "Open the JavaScript console by pressing Shift + `",
+  "description": "Adds a JavaScript console to Melvor Idle, similar to that available in major browser's developer tools. Open the console by pressing ~",
   "content_scripts": [
     {
       "js": ["console.js"],
