@@ -7,11 +7,14 @@
   let $resizeBar;
   let $header;
   let $clearBtn;
+  let $closeBtn;
   let $logs;
   let $footer;
   let $footerGlyph;
   let $codeInput;
   let $expandBtn;
+  let $gameHeaderBtnWrapper;
+  let $gameHeaderBtn;
 
   let resizeStartHeight;
   let resizeStartMousePos;
@@ -60,7 +63,9 @@
     $consoleBody = $('<div>').addClass('m3c-console-body');
     $resizeBar = $('<div>').addClass('m3c-resize');
     $header = $('<div>').addClass('m3c-header').text('Console');
+    $headerBtnWrapper = $('<div>');
     $clearBtn = $('<div>').addClass('m3c-button').prop('title', 'Clear console').append($('<i>').addClass('fa fa-fw fa-trash'));
+    $closeBtn = $('<div>').addClass('m3c-button').prop('title', 'Close console').append($('<i>').addClass('fa fa-fw fa-times'));
     $logs = $('<div>').addClass('m3c-logs');
     $footer = $('<div>').addClass('m3c-footer');
     $footerGlyph = $('<span>').addClass('m3c-code-glyph').append($('<i>').addClass('fa fa-fw fa-angle-right'));
@@ -70,13 +75,18 @@
     $wrapper.append(
       $consoleBody
         .append($resizeBar)
-        .append($header.append($clearBtn))
+        .append($header.append($headerBtnWrapper.append($clearBtn).append($closeBtn)))
         .append($logs).append(
           $footer
             .append($footerGlyph)
             .append($codeInput)
             .append($expandBtn)
       ));
+
+    $gameHeaderBtnWrapper = $('<div>').addClass('d-inline-block ml-2');
+    $gameHeaderBtn = $('<button>').addClass('btn btn-sm btn-dual text-combat-smoke').append($('<i>').addClass('fa fa-fw fa-terminal'));
+
+    $gameHeaderBtnWrapper.append($gameHeaderBtn);
   };
 
   const attachEvents = () => {
@@ -118,7 +128,18 @@
       return false;
     });
 
+    // Esc key to lose focus on input
+    $codeInput.on('keydown', e => {
+      if (e.which !== 27) return true;
+      
+      e.preventDefault();
+      $codeInput.blur();
+      return false;
+    });
+
     $clearBtn.on('click', clearLogs);
+    $closeBtn.on('click', toggleConsole);
+    $gameHeaderBtn.on('click', toggleConsole);
 
     if (window.kb) {
       window.kb.register('JS Console', 'General', { key: '~' }, toggleConsole);
@@ -159,6 +180,14 @@
 
   const inject = () => {
     $('#m-page-loader').after($wrapper);
+
+    // Wait until main game UI is loaded for button
+    let loadingInterval = setInterval(() => {
+      if (!characterSelected || characterLoading) return;
+
+      $('#header-theme > .align-items-right > .d-inline-block').first().before($gameHeaderBtnWrapper);
+      clearInterval(loadingInterval);
+    }, 500);
   };
 
   const stopHotKey = (e) => {

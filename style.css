@@ -57,12 +57,12 @@
 }
 
 .m3c-log-error {
-  background-color: #6a2a2a;
+  background-color: #4e3131;
   color: red;
 }
 
 .m3c-log-warn {
-  background-color: #5a5a10;
+  background-color: #44441f;
   color: yellow;
 }
 
@@ -111,6 +111,7 @@
   background-color: transparent;
   border-radius: 4px;
   cursor: pointer;
+  display: inline-block;
   padding: 5px;
 }
 
